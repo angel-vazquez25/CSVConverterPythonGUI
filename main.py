@@ -24,27 +24,52 @@ def convert_to_cv(excel_file_path, output_folder, sheet_name, separator, decimal
     sg.popup_no_titlebar("Done! :)")
 
 
-# ------ GUI Definition ------ #
-layout = [[sg.Text("Input File:"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
-          [sg.Text("Output Folder:"), sg.Input(key="-OUT-"), sg.FolderBrowse()],
-          [sg.Exit(), sg.Button("Display Excel File"), sg.Button("Convert To CSV")]]
+def settings_window(settings):
+    # ------- GUI Definition ------ #
+    layout = [
+            [sg.Text("SETTINGS")],
+            [sg.Text("Separator"), sg.Input(settings["CSV"])]
+    ]
 
-window = sg.Window("Excel 2 CSV Converter", layout)
+def main_window():
+    # ------ GUI Definition ------ #
+    layout = [[sg.Text("Input File:"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
+              [sg.Text("Output Folder:"), sg.Input(key="-OUT-"), sg.FolderBrowse()],
+              [sg.Exit(), sg.Button("Settings"), sg.Button("Display Excel File"), sg.Button("Convert To CSV")]]
 
-while True:
-    event, values = window.read()
-    if event in (sg.WINDOW_CLOSED, "Exit"):
-        break
-    if event == "Display Excel File":
-        if is_valid_path(values["-IN-"]):
-            display_excel_file(values["-IN-"], "Sheet1")
-    if event == "Convert TO CSV":
-        if is_valid_path(values["-IN-"]) and is_valid_path(values["-OUT-"]):
-            convert_to_cv(excel_file_path=values["-IN-"],
-                          output_folder=values["-OUT-"],
-                          sheet_name="Sheet1",
-                          separator="|",
-                          decimal="."
-                          )
+    window_title = settings["GUI"]["title"]
+    window = sg.Window("Excel 2 CSV Converter", layout)
 
-window.close()
+    while True:
+        event, values = window.read()
+        if event in (sg.WINDOW_CLOSED, "Exit"):
+            break
+        if event == "Display Excel File":
+            if is_valid_path(values["-IN-"]):
+                display_excel_file(values["-IN-"], settings["EXCEL"]["sheet_name"])
+        if event == "Settings":
+            settings_window(settings)
+        if event == "Convert TO CSV":
+            if is_valid_path(values["-IN-"]) and is_valid_path(values["-OUT-"]):
+                convert_to_cv(excel_file_path=values["-IN-"],
+                              output_folder=values["-OUT-"],
+                              sheet_name=settings["EXCEL"]["sheet_name"],
+                              separator=settings["CSV"]["separator"],
+                              decimal=settings["CSV"]["decimal"],
+                              )
+
+    window.close()
+
+
+if __name__ == "__main__":
+    SETTINGS_PATH = Path.cwd()
+    # create the settings object and use ini format
+    settings = sg.UserSettings(
+        path=SETTINGS_PATH, filename="config.ini", use_config_file=True, convert_bools_and_none=True
+    )
+    theme = settings["GUI"]["theme"]
+    font_family = settings["GUI"]["font_family"]
+    font_size = settings["GUI"]["font_size"]
+    sg.theme(theme)
+    sg.set_options(font=(font_family, font_size))
+    main_window()
