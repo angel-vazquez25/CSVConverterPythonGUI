@@ -50,7 +50,6 @@ def settings_window(settings):
             break
     window.close()
 
-
 def main_window():
     # ------ Menu Definition ------ #
     menu_def = [["Toolbar", ["Command 1", "Command 2", "---", "Command 3", "Command 4"]],
@@ -104,4 +103,5 @@ if __name__ == "__main__":
     font_size = settings["GUI"]["font_size"]
     sg.theme(theme)
     sg.set_options(font=(font_family, font_size))
+
     main_window()
