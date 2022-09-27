@@ -27,9 +27,29 @@ def convert_to_cv(excel_file_path, output_folder, sheet_name, separator, decimal
 def settings_window(settings):
     # ------- GUI Definition ------ #
     layout = [
-            [sg.Text("SETTINGS")],
-            [sg.Text("Separator"), sg.Input(settings["CSV"])]
-    ]
+        [sg.Text("SETTINGS")],
+        [sg.Text("Separator"), sg.Input(settings["CSV"]["separator"], s=1, key="-SEPARATOR-"),
+         sg.Text("Decimal"), sg.Combo(settings["CSV"]["decimal"].split("|"),
+                                      default_value=settings["CSV"]["decimal_default"], s=1, key="-DECIMAL-"),
+         sg.Text("Sheet Name:"), sg.Input(settings["EXCEL"]["sheet_name"], s=20, key="-SHEET_NAME-")],
+        [sg.Button("Save Current Settings", s=20)]]
+
+    window = sg.Window("Settings Window", layout, modal=True)
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED:
+            break
+        if event == "Save Curent Settings":
+            # Write to ini file
+            settings["CSV"]["separator"] = values["-SEPARATOR-"]
+            settings["CSV"]["decimal_default"] = values["-DECIMAL-"]
+            settings["EXCEL"]["sheet_name"] = values["-SHEET_NAME-"]
+
+            # Display success message & close window
+            sg.popup_no_titlebar("Settings saved!")
+            break
+    window.close()
+
 
 def main_window():
     # ------ GUI Definition ------ #
