@@ -34,12 +34,12 @@ def settings_window(settings):
          sg.Text("Sheet Name:"), sg.Input(settings["EXCEL"]["sheet_name"], s=20, key="-SHEET_NAME-")],
         [sg.Button("Save Current Settings", s=20)]]
 
-    window = sg.Window("Settings Window", layout, modal=True)
+    window = sg.Window("Settings Window", layout, modal=True, use_custom_titlebar=True)
     while True:
         event, values = window.read()
         if event == sg.WINDOW_CLOSED:
             break
-        if event == "Save Curent Settings":
+        if event == "Save Current Settings":
             # Write to ini file
             settings["CSV"]["separator"] = values["-SEPARATOR-"]
             settings["CSV"]["decimal_default"] = values["-DECIMAL-"]
@@ -58,9 +58,10 @@ def main_window():
 
     # ------ GUI Definition ------ #
     layout = [[sg.MenubarCustom(menu_def, tearoff=False)],
-              [sg.Text("Input File:"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
-              [sg.Text("Output Folder:"), sg.Input(key="-OUT-"), sg.FolderBrowse()],
-              [sg.Exit(), sg.Button("Settings"), sg.Button("Display Excel File"), sg.Button("Convert To CSV")]]
+              [sg.Text("Input File:", s=15, justification="r"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
+              [sg.Text("Output Folder:", justification="r"), sg.Input(key="-OUT-"), sg.FolderBrowse()],
+              [sg.Exit(s=16, button_color="tomato"), sg.Button("Settings", s=16), sg.Button("Display Excel File", s=16),
+               sg.Button("Convert To CSV", s=16)]]
 
     window_title = settings["GUI"]["title"]
     window = sg.Window("Excel 2 CSV Converter", layout, use_custom_titlebar=True)
