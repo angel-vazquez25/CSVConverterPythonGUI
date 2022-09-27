@@ -52,18 +52,29 @@ def settings_window(settings):
 
 
 def main_window():
+    # ------ Menu Definition ------ #
+    menu_def = [["Toolbar", ["Command 1", "Command 2", "---", "Command 3", "Command 4"]],
+                ["Help", ["Settings", "About", "Exit"]]]
+
     # ------ GUI Definition ------ #
-    layout = [[sg.Text("Input File:"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
+    layout = [[sg.MenubarCustom(menu_def, tearoff=False)],
+              [sg.Text("Input File:"), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Excel Files", "*.xls*"),))],
               [sg.Text("Output Folder:"), sg.Input(key="-OUT-"), sg.FolderBrowse()],
               [sg.Exit(), sg.Button("Settings"), sg.Button("Display Excel File"), sg.Button("Convert To CSV")]]
 
     window_title = settings["GUI"]["title"]
-    window = sg.Window("Excel 2 CSV Converter", layout)
+    window = sg.Window("Excel 2 CSV Converter", layout, use_custom_titlebar=True)
 
     while True:
         event, values = window.read()
         if event in (sg.WINDOW_CLOSED, "Exit"):
             break
+        if event == "About":
+            window.disappear()
+            sg.popup(window_title, "Version 1.0", "Convert Excel files to CSV", grab_anywhere=True)
+            window.reappear()
+        if event in ("Command 1","Command 2","Command 3","Command 4"):
+            sg.popup("Not yet implemented")
         if event == "Display Excel File":
             if is_valid_path(values["-IN-"]):
                 display_excel_file(values["-IN-"], settings["EXCEL"]["sheet_name"])
