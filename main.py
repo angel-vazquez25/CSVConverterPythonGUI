@@ -3,6 +3,13 @@ import pandas as pd  # pip install pandas openpyxl
 import PySimpleGUI as sg  # pip install pysimplegui
 
 
+def is_valid_path(filepath):
+    if filepath and Path(filepath).exists():
+        return True
+    sg.popup_error("Filepath not correct")
+    return False
+
+
 def display_excel_file(excel_file_path, sheet_name):
     df = pd.read_excel(excel_file_path, sheet_name)
     filename = Path(excel_file_path).name
@@ -29,12 +36,15 @@ while True:
     if event in (sg.WINDOW_CLOSED, "Exit"):
         break
     if event == "Display Excel File":
-        display_excel_file(values["-IN-"], "Sheet1")
+        if is_valid_path(values["-IN-"]):
+            display_excel_file(values["-IN-"], "Sheet1")
     if event == "Convert TO CSV":
-        convert_to_cv(excel_file_path=values["-IN-"],
-                      output_folder=values["-OUT-"],
-                      sheet_name="Sheet1",
-                      separator="|",
-                      decimal=".")
+        if is_valid_path(values["-IN-"]) and is_valid_path(values["-OUT-"]):
+            convert_to_cv(excel_file_path=values["-IN-"],
+                          output_folder=values["-OUT-"],
+                          sheet_name="Sheet1",
+                          separator="|",
+                          decimal="."
+                          )
 
 window.close()
