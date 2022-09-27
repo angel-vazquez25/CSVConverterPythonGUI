@@ -7,10 +7,10 @@ GUI developed using PySImpleGUI that converts a selected Excel sheet into a CSV 
 
 # Screenshots
 **Main Window:**
-![Main Window](/main_window.jpg?raw=true "Main Window")
+![Main Window](/main_window.jpeg?raw=true "Main Window")
 <br/>
 **Settings Window:**
-![Settings Window](/settings_window.jpg?raw=true "Settings Window")
+![Settings Window](/settings_window.jpeg?raw=true "Settings Window")
 
 ## Requirements
 Install the dependecies with pip
