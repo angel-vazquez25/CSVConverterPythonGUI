@@ -5,7 +5,8 @@ import PySimpleGUI as sg  # pip install pysimplegui
 
 def display_excel_file(excel_file_path, sheet_name):
     df = pd.read_excel(excel_file_path, sheet_name)
-    filename = Path
+    filename = Path(excel_file_path).name
+    sg.popup_scrolled(df.types, "=" * 50, df, title=filename)
 
 
 def convert_to_cv(excel_file_path, output_folder, sheet_name, separator, decimal):
@@ -28,7 +29,7 @@ while True:
     if event in (sg.WINDOW_CLOSED, "Exit"):
         break
     if event == "Display Excel File":
-        pass
+        display_excel_file(values["-IN-"], "Sheet1")
     if event == "Convert TO CSV":
         convert_to_cv(excel_file_path=values["-IN-"],
                       output_folder=values["-OUT-"],
